@@ -7,6 +7,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min";
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import CountryDetails from './components/countrydetails.jsx';
 import ContinentData from './components/continents.jsx';
+import Countries from './components/country.jsx';
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
   {
     path: '/continents',
     element: <ContinentData/>
+  },
+  {
+    path: '/country',
+    element:<Countries/>
   }
 ])
 

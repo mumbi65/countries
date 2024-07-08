@@ -141,3 +141,12 @@ button:focus-visible {
   gap: 200px;
   
 }
+
+.detailslink{
+  text-decoration: none;
+  color: black;
+}
+
+.detailslink:hover{
+  color: lightgray;
+}

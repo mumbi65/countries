@@ -52,9 +52,9 @@ const CountryDetails = () => {
                             <ul>
                                 {
                                 relatedCountries.map((relatedCountry, index) => (
-                                    <li key={index}>
-                                         ({relatedCountry.altSpellings.join(', ')})
-                                    </li>
+                                    <Link to='/countrydetails' state={relatedCountry} key={index} className="detailslink">
+                                         <li>{relatedCountry.name.common} ({relatedCountry.altSpellings.join(', ')})</li>
+                                    </Link>
                                 ))}
                             </ul>
                         </div>
