@@ -1,23 +1,23 @@
 import React, {useState, useEffect} from "react";
 import Countries from "./country";
+import axios from "axios";
+import { OrbitProgress } from "react-loading-indicators";
 
 const CountryContainer = () =>{
 
     const[countries, setCountries] = useState([])
+    const [isLoaded, setIsLoaded] = useState(false)
 
     useEffect(() => {
-        const fetchCountries = async () => {
-            try {
-                const response = await fetch('https://restcountries.com/v3.1/all')
-                const data = await response.json()
-                console.log(data)
-                setCountries(data)
-            }
-            catch(error){
-                console.error("Error fetching countries:", error)
-            }
-        }
-        fetchCountries()
+        axios.get("https://restcountries.com/v3.1/all").then((response) => {
+            setCountries(response.data)
+            setIsLoaded(true)
+        })
+        .catch((error) =>{
+            console.error("Error fetching countries:", error)
+            setIsLoaded(true)
+        })
+        
     }, [])
 
     return(
@@ -25,15 +25,19 @@ const CountryContainer = () =>{
         <div className="container">
             <div className="row justify-content-around">
                 {
-                    countries.slice(0, 50).map((country, index) => {
+                  isLoaded ? countries.map((country, index) => {
                         return(
                             <div className="col-md-4 mb-4" key={index}>
                             <Countries countrydata = {country}/>
                         </div>
                         )
                     })
+                    :
+                    <OrbitProgress color="#32cd32" size="medium" text="" textColor=""p/>
                         
-                }
+            }
+            
+
             </div>
         </div>
         </>

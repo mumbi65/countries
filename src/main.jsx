@@ -8,6 +8,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import CountryDetails from './components/countrydetails.jsx';
 import ContinentData from './components/continents.jsx';
 import Countries from './components/country.jsx';
+import SearchResult from './components/searchresult.jsx';
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
   {
     path: '/country',
     element:<Countries/>
+  },
+  {
+    path: '/searchresult',
+    element:<SearchResult/>
   }
 ])
 

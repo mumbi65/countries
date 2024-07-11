@@ -1,7 +1,59 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Select from "react-select";
+import SearchResult from "./searchresult";
+import axios from "axios";
+import { useState } from "react";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
+
+    const [countries, setCountries] = useState([])
+    const [searchQuery, setSearchQuery] = useState('')
+    const [filteredCountires, setFiletredCountries] = useState([])
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        axios.get("https://restcountries.com/v3.1/all").then((response) => {
+            setCountries(response.data)
+            
+        })
+        .catch((error) =>{
+            console.error("Error fetching countries:", error)
+            
+        })
+    }, [])
+
+    const handleSearchChange = (e) => {
+        const query = e.target.value
+        setSearchQuery(query)
+        if(query){
+            const filtered = countries.filter(country => country.name.common.toLowerCase().includes(query.toLowerCase()))
+            setFiletredCountries(filtered)
+        }else{
+            setFiletredCountries([])
+        }
+    }
+
+    const handleCountrySelect = (country) => {
+        setSearchQuery(country.name.common)
+        setFiletredCountries([])
+        navigate('/searchresult', {state: {country}})
+    }
+
+    const handleSearchSubmit = (e) => {
+        e.preventDefault()
+        const country = countries.find(country => country.name.common.toLowerCase() === searchQuery.toLowerCase())
+        if(country) {
+            navigate("/searchresult", {state: {country}})
+        }
+        else{
+            alert("Country not found")
+        }
+
+    }
+
     return(
         <>
         <div className="countries-nav-bar">
@@ -39,8 +91,32 @@ const NavBar = () => {
                     </li>
                 </ul>
             </div>
-        </div>
-            
+            <div>
+                <form class="d-flex" role="search" onSubmit={handleSearchSubmit}>
+                    <input
+                        type="text"
+                        onChange={handleSearchChange}
+                        placeholder="Search for a country..."
+                        className="form-control me-2"
+                        aria-label="Search"
+                        value={searchQuery}
+                    />
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+                {filteredCountires.length > 0 && (
+                    <ul className="dropdown-menu show" style={{ position: "absolute", zIndex: 1000, width: "300px" }}>
+                    {
+                        filteredCountires.map((country, index) => (
+                    
+                                <li key={index} className="dropdown-item" onClick={() => handleCountrySelect(country)}>
+                                    {country.name.common}
+                                </li>
+                        ))
+                    }
+                </ul>
+                )}
+            </div>
+        </div> 
         </>
     )
 }
